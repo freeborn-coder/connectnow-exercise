@@ -4,10 +4,15 @@
         <Sidebar />
     
         <article>
-            <GameCard />
-            <GameCard />
-            <GameCard />
+            <template v-if="games.length">
+                <GameCard 
+                    v-for="game in games" :key="game.id" 
+                    :game="game">
+                </GameCard>
+            </template>    
+            <h4 v-else>Loading Games...</h4>
         </article> 
+
     </section>
     
     
@@ -21,6 +26,19 @@
         name:'index',
         components:{
             GameCard, Sidebar
+        },
+        data(){
+            return {
+                games:[]
+            }
+        },
+        async mounted(){
+            try{
+                const res = await fetch('https://public.connectnow.org.uk/applicant-test/');
+                this.games = await res.json();
+            }catch(e){
+                console.error(e);
+            }
         }
     }
 </script>

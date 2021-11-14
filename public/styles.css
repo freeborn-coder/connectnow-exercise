@@ -134,8 +134,9 @@ main section.home-section article .game-card .game-details {
 main section.home-section article .game-card .game-details .score {
   text-align: center;
   place-self: center;
-  height: 28px;
-  width: 28px;
+  height: 30px;
+  width: 30px;
+  font-size: 14px;
   font-weight: bold;
   background-color: #5692e8;
   border-radius: 50%;
@@ -161,6 +162,7 @@ button {
   padding: 4px 8px;
   border-radius: 2px;
   font-weight: 600;
+  cursor:pointer;
 }
 
 .input-group {
@@ -321,6 +323,7 @@ section.contact .form-grid {
   main section.home-section aside div.aside-grid .clear-div button {
     width: 100%;
     margin-top: 10px;
+    cursor:pointer;
   }
   main section.home-section aside div.aside-grid .input-group {
     -ms-grid-columns: 0.5fr 9fr;
