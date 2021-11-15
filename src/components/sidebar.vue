@@ -20,7 +20,10 @@
             <label for="orderBy">Order By</label>
         
             <div class="input-group">
-                    <button><i class="fa fa-arrow-up"></i></button>
+                    <!-- <button @click="changeOrder"><i class="fa fa-arrow-up"></i></button> -->
+                    <button @click="changeOrder">
+                        <i class="fa" :class="$store.state.sortOrder == 'asc' ? 'fa-arrow-up':'fa-arrow-down'"></i>
+                    </button>
                     <select name="" id="orderBy" v-model="order" @change="setGamesOrder">
                         <option value="release_date">Release Date</option>
                         <option value="score">Score</option>
@@ -63,6 +66,9 @@
                 this.order = null;
                 this.minScore = null;
                 this.name = null;
+            },
+            changeOrder(){
+                this.$store.commit('CHANGE_ORDER');
             }
         }
     }

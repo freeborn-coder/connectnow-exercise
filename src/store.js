@@ -11,7 +11,8 @@ export default new Vuex.Store({
           name:undefined,
           min_score:undefined
       },
-      orderBy:undefined
+      orderBy:undefined,
+      sortOrder:'asc'
     },
     mutations: {
       addGames(state,games){
@@ -30,6 +31,9 @@ export default new Vuex.Store({
         state.filters.name = undefined;
         state.filters.min_score = undefined;
         state.orderBy = undefined;
+      },
+      CHANGE_ORDER(state){
+          state.sortOrder = state.sortOrder == 'asc' ? 'desc':'asc';
       }
     },
     actions:{
@@ -44,7 +48,7 @@ export default new Vuex.Store({
         }
     },
     getters:{
-        getGames({ games,filters,orderBy }){
+        getGames({ games,filters,orderBy,sortOrder }){
             let filtered = games;
 
             if(filters.name){
@@ -70,7 +74,9 @@ export default new Vuex.Store({
                 }
             }
 
-            if( !(filters.name || filters.min_score) ) return filtered;
+            if( !(filters.name || filters.min_score || orderBy) ) return filtered;
+
+            if(sortOrder == 'desc') filtered.reverse();
             
             return filtered;
         },
