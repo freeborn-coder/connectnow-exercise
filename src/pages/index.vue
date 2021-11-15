@@ -27,18 +27,13 @@
         components:{
             GameCard, Sidebar
         },
-        data(){
-            return {
-                games:[]
+        computed:{
+            games(){
+                return this.$store.getters.getGames;
             }
         },
-        async mounted(){
-            try{
-                const res = await fetch('https://public.connectnow.org.uk/applicant-test/');
-                this.games = await res.json();
-            }catch(e){
-                console.error(e);
-            }
+        mounted(){
+            if(this.$store.getters.getGamesCount < 1) this.$store.dispatch('fetchGames');
         }
     }
 </script>

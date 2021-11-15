@@ -9,7 +9,7 @@
                     {{ game.name }}
                 </h4>
                 <p class="small">
-                    Release Date: {{ game.first_release_date }}
+                    Release Date: {{ releaseDate }}
                 </p>
                 <p>
                     [Summary]: {{ game.summary }}
@@ -33,6 +33,9 @@
         computed:{
             rating(){
                 return (this.game.rating / 10).toFixed(1);
+            },
+            releaseDate(){
+                return new Date(this.game.first_release_date).toLocaleDateString();
             }
         }
     }
