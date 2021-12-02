@@ -6,7 +6,7 @@
         <article>
             <template v-if="games.length">
                 <GameCard 
-                    v-for="game in games" :key="game.id" 
+                    v-for="game in getGames()" :key="game.id" 
                     :game="game">
                 </GameCard>
             </template>    
@@ -15,27 +15,42 @@
 
     </section>
     
-    
 </template>
 
-<script>
-    import GameCard from '@/components/game-card'
-    import Sidebar from '@/components/sidebar.vue'
+<script lang="ts">
 
-    export default {
-        name:'index',
-        components:{
-            GameCard, Sidebar
-        },
-        computed:{
-            games(){
-                return this.$store.getters.getGames;
-            }
-        },
-        mounted(){
-            if(this.$store.getters.getGamesCount < 1) this.$store.dispatch('fetchGames');
-        }
+import Component from 'vue-class-component';
+import Vue from 'vue';
+import GameCard from '../components/game-card.vue'
+import Sidebar from '../components/sidebar.vue'
+import { mapActions, mapGetters } from 'vuex'
+import { GamesInterface } from '@/store/type';
+
+@Component({ 
+    computed:{
+        ...mapGetters({
+            games:'getGames',
+            count:'getGamesCount'
+        })
+    },
+    methods:{
+        ...mapActions({fetchGames:'fetchGames'})
+    },
+    components:{
+        GameCard, Sidebar
     }
+})
+export default class Index extends Vue {
+    fetchGames!: () => Promise<void>
+    getGames! : () => GamesInterface[]
+    getGamesCount! : () => number
+    
+    mounted() {
+        if(this.getGamesCount() < 1) this.fetchGames();
+    }
+
+}
+
 </script>
 
 <style lang="stylus" scoped>

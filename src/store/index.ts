@@ -1,46 +1,47 @@
 import Vue from 'vue'
-import Vuex from 'vuex';
+import Vuex, { StoreOptions } from 'vuex';
+import { GamesInterface, RootState } from './type';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store: StoreOptions<RootState> = {
     state: {
       games:[],
       filteredGames:[],
       filters:{
-          name:undefined,
-          min_score:undefined
+          name:null,
+          min_score:null
       },
-      orderBy:undefined,
+      orderBy:null,
       sortOrder:'asc'
     },
     mutations: {
-      addGames(state,games){
+      addGames(state:RootState,games:GamesInterface[]) : void {
         state.games.push(...games);
       },
-      UPDATE_NAME_FILTER(state,val){
+      UPDATE_NAME_FILTER(state : RootState, val : string) : void{
           state.filters.name = val;
       },
-      UPDATE_MIN_SCORE_FILTER(state,val){
+      UPDATE_MIN_SCORE_FILTER(state:RootState,val:number){
           state.filters.min_score = val;
       },
-      UPDATE_GAMES_ORDER(state,val){
+      UPDATE_GAMES_ORDER(state:RootState, val:string){
           state.orderBy = val;
       },
-      CLEAR_ALL_FILTERS(state){
-        state.filters.name = undefined;
-        state.filters.min_score = undefined;
-        state.orderBy = undefined;
+      CLEAR_ALL_FILTERS(state:RootState){
+        state.filters.name = null;
+        state.filters.min_score = null;
+        state.orderBy = null;
       },
-      CHANGE_ORDER(state){
+      CHANGE_ORDER(state: RootState){
           state.sortOrder = state.sortOrder == 'asc' ? 'desc':'asc';
       }
     },
     actions:{
-        async fetchGames(state){
+        async fetchGames(state): Promise<void> {
             try{
-                const res = await fetch('https://public.connectnow.org.uk/applicant-test/');
-                const games = await res.json();
+                const res: Response = await fetch('https://public.connectnow.org.uk/applicant-test/');
+                const games:GamesInterface[] = (await res.json()) as GamesInterface[];
                 state.commit('addGames',games);
             }catch(e){
                 console.error(e);
@@ -48,16 +49,16 @@ export default new Vuex.Store({
         }
     },
     getters:{
-        getGames({ games,filters,orderBy,sortOrder }){
-            let filtered = games;
+        getGames({ games,filters,orderBy,sortOrder }) : GamesInterface[] {
+            let filtered:GamesInterface[] = games;
 
             if(filters.name){
-                filtered = games.filter(game => game.name.toLowerCase().includes(filters.name.toLocaleLowerCase()));
+                filtered = games.filter(game => game.name.toLowerCase().includes(filters.name!.toLocaleLowerCase()));
             }
 
             if(filters.min_score && !Number.isNaN(filters.min_score)){
-                let min = Number(filters.min_score) * 10;
-                min = min.toFixed(1);
+                let min:number = Number(filters.min_score) * 10;
+                min = Number(min.toFixed(1));
                 filtered = filtered.filter(game => game.rating >= min);
             }
 
@@ -80,8 +81,10 @@ export default new Vuex.Store({
             
             return filtered;
         },
-        getGamesCount(state){
+        getGamesCount(state):number{
             return state.games.length;
         } 
     }
-})
+}
+
+export default new Vuex.Store<RootState>(store);

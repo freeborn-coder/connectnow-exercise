@@ -22,23 +22,25 @@
     </div>
 </template>
 
-<script>
-    export default {
-        props:{
-            game:{
-                type:Object,
-                required:true
-            }
-        },
-        computed:{
-            rating(){
-                return (this.game.rating / 10).toFixed(1);
-            },
-            releaseDate(){
-                return new Date(this.game.first_release_date).toLocaleDateString();
-            }
-        }
+<script lang = 'ts'>
+
+import { Prop,Vue } from 'vue-property-decorator';
+import { GamesInterface } from '../store/type';
+
+export default class GameCard extends Vue{
+    
+    @Prop({default:null,required:true})
+    game!: GamesInterface
+
+    get rating():string {
+        return (this.game.rating / 10).toFixed(1);
     }
+    
+    get releaseDate() : string {
+        return new Date(this.game.first_release_date).toLocaleDateString();
+    }
+
+}
 </script>
 
 <style lang="css" scoped>
