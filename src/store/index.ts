@@ -16,33 +16,33 @@ const store: StoreOptions<RootState> = {
       sortOrder:'asc'
     },
     mutations: {
-      addGames(state:RootState,games:GamesInterface[]) : void {
+      addGames(state,games:GamesInterface[]) : void {
         state.games.push(...games);
       },
-      UPDATE_NAME_FILTER(state : RootState, val : string) : void{
+      UPDATE_NAME_FILTER(state, val : string) : void{
           state.filters.name = val;
       },
-      UPDATE_MIN_SCORE_FILTER(state:RootState,val:number){
+      UPDATE_MIN_SCORE_FILTER(state,val:number){
           state.filters.min_score = val;
       },
-      UPDATE_GAMES_ORDER(state:RootState, val:string){
+      UPDATE_GAMES_ORDER(state, val:string){
           state.orderBy = val;
       },
-      CLEAR_ALL_FILTERS(state:RootState){
+      CLEAR_ALL_FILTERS(state){
         state.filters.name = null;
         state.filters.min_score = null;
         state.orderBy = null;
       },
-      CHANGE_ORDER(state: RootState){
+      CHANGE_ORDER(state){
           state.sortOrder = state.sortOrder == 'asc' ? 'desc':'asc';
       }
     },
     actions:{
-        async fetchGames(state): Promise<void> {
+        async fetchGames({ commit }): Promise<void> {
             try{
                 const res: Response = await fetch('https://public.connectnow.org.uk/applicant-test/');
                 const games:GamesInterface[] = (await res.json()) as GamesInterface[];
-                state.commit('addGames',games);
+                commit('addGames',games);
             }catch(e){
                 console.error(e);
             }
@@ -81,8 +81,8 @@ const store: StoreOptions<RootState> = {
             
             return filtered;
         },
-        getGamesCount(state):number{
-            return state.games.length;
+        getGamesCount({ games }):number{
+            return games.length;
         } 
     }
 }

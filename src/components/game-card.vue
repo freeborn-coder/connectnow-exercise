@@ -24,14 +24,16 @@
 
 <script lang = 'ts'>
 
-import { Prop,Vue } from 'vue-property-decorator';
+import { Component, Prop,Vue } from 'vue-property-decorator';
 import { GamesInterface } from '../store/type';
 
+@Component
 export default class GameCard extends Vue{
     
-    @Prop({default:null,required:true})
-    game!: GamesInterface
+    @Prop({required:true})
+    game!:GamesInterface;
 
+    // get gameItem() : GamesInterface { return this.game }
     get rating():string {
         return (this.game.rating / 10).toFixed(1);
     }

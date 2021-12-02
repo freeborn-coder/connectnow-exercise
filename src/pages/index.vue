@@ -6,7 +6,7 @@
         <article>
             <template v-if="games.length">
                 <GameCard 
-                    v-for="game in getGames()" :key="game.id" 
+                    v-for="game in games" :key="game.id" 
                     :game="game">
                 </GameCard>
             </template>    
@@ -30,7 +30,7 @@ import { GamesInterface } from '@/store/type';
     computed:{
         ...mapGetters({
             games:'getGames',
-            count:'getGamesCount'
+            gamesCount:'getGamesCount'
         })
     },
     methods:{
@@ -42,11 +42,11 @@ import { GamesInterface } from '@/store/type';
 })
 export default class Index extends Vue {
     fetchGames!: () => Promise<void>
-    getGames! : () => GamesInterface[]
-    getGamesCount! : () => number
+    games! : GamesInterface[]
+    gamesCount! : number
     
     mounted() {
-        if(this.getGamesCount() < 1) this.fetchGames();
+        if(this.gamesCount < 1) this.fetchGames();
     }
 
 }
