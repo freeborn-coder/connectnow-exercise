@@ -10,6 +10,7 @@ Vue.use(VueRouter);
 Vue.config.productionTip = false
 
 const router: VueRouter = new VueRouter({
+  mode:'history',
   routes:[
     { path: '/', component: Index },
     { path: '/contact', component: Contact }
