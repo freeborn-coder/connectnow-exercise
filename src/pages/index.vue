@@ -46,7 +46,7 @@ export default class Index extends Vue {
     gamesCount! : number
     
     mounted() {
-        if(this.gamesCount < 1) this.fetchGames();
+        if(!this.gamesCount) this.fetchGames();
     }
 
 }

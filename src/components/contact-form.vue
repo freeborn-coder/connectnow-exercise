@@ -41,10 +41,14 @@
     </section>
 </template>
 
-<script>
-    export default {
-        
-    }
+<script lang="ts">
+
+import Vue from 'vue'
+import Component from 'vue-class-component';
+
+@Component
+export default class ContactForm extends Vue {}
+
 </script>
 
 <style lang="stylus" scoped>

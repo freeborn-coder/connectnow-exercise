@@ -6,25 +6,35 @@
 
         <div>
             <label for="name">Name [contains]</label>
-            <input type="text" name="" id="name" v-model="name" @keyup="filterGamesByName" placeholder="Text string">
+            <input 
+                type="text" 
+                name="" id="name" 
+                v-model="name" 
+                placeholder="Text string"
+                @keyup="updateNameFilter($event.target.value)" 
+            >
         </div>
         
         <div class="aside-grid">
             <div class="min-score-div">
                 <label for="minScore">Minimum Score</label>
                 <div>
-                    <input type="text" name="" v-model="minScore" @keyup="filterGamesByMinScore" id="minScore" placeholder="1 - 10">
+                    <input 
+                        type="text" name="" 
+                        v-model="minScore" 
+                        id="minScore" placeholder="1 - 10"
+                        @keyup="updateMinScoreFilter($event.target.value)" 
+                    >
                 </div>
             </div>
         <div>
             <label for="orderBy">Order By</label>
         
             <div class="input-group">
-                    <!-- <button @click="changeOrder"><i class="fa fa-arrow-up"></i></button> -->
                     <button @click="changeOrder">
-                        <i class="fa" :class="$store.state.sortOrder == 'asc' ? 'fa-arrow-up':'fa-arrow-down'"></i>
+                        <i class="fa" :class="sortOrder === 'asc' ? 'fa-arrow-up':'fa-arrow-down'"></i>
                     </button>
-                    <select name="" id="orderBy" v-model="order" @change="setGamesOrder">
+                    <select name="" id="orderBy" v-model="order" @change="updateGamesOrder($event.target.value)">
                         <option value="release_date">Release Date</option>
                         <option value="score">Score</option>
                         <option value="name">Name</option>
@@ -32,7 +42,7 @@
                     </div>
                     </div>
             <div class="clear-div">
-                <button @click="clearAllFilters">Clear</button>
+                <button @click="clearFilters">Clear</button>
             </div>
         </div>
         
@@ -40,38 +50,47 @@
 
 </template>
 
-<script>
+<script lang="ts">
 
-    export default {
-        name:'sidebar',
-        data(){
-            return {
-                order:null,
-                minScore:null,
-                name:null
-            }
-        },
-        methods:{
-            filterGamesByName(event){
-                this.$store.commit('UPDATE_NAME_FILTER',event.target.value);
-            },
-            filterGamesByMinScore(event){
-                this.$store.commit('UPDATE_MIN_SCORE_FILTER',event.target.value.trim());
-            },
-            setGamesOrder(event){
-                this.$store.commit('UPDATE_GAMES_ORDER',event.target.value);
-            },
-            clearAllFilters(){
-                this.$store.commit('CLEAR_ALL_FILTERS');
-                this.order = null;
-                this.minScore = null;
-                this.name = null;
-            },
-            changeOrder(){
-                this.$store.commit('CHANGE_ORDER');
-            }
-        }
+import { Component,Vue } from 'vue-property-decorator';
+import { Action,Getter } from 'vuex-class';
+
+@Component
+export default class Sidebar extends Vue{
+
+    order = null
+    minScore = null
+    name = null
+
+    @Action('updateNameFilter')
+    // eslint-disable-next-line no-unused-vars
+    updateNameFilter!: (param: string) => void;
+
+    @Action('updateMinScoreFilter')
+    // eslint-disable-next-line no-unused-vars
+    updateMinScoreFilter!: (param:number) => void;
+
+    @Action('updateGamesOrder')
+    // eslint-disable-next-line no-unused-vars
+    updateGamesOrder!: (param:string) => void;
+
+    @Action('clearAllFilters')
+    clearAllFilters!: () => void;
+
+    @Action('changeOrder')
+    changeOrder!: () => void;
+
+    @Getter('sortOrder')
+    sortOrder!: () => string;
+
+    clearFilters():void{
+        this.clearAllFilters();
+        this.order = null;
+        this.minScore = null;
+        this.name = null;
     }
+    
+}
 </script>
 
 <style>

@@ -16,7 +16,7 @@ const store: StoreOptions<RootState> = {
       sortOrder:'asc'
     },
     mutations: {
-      addGames(state,games:GamesInterface[]) : void {
+      ADD_GAMES(state,games:GamesInterface[]) : void {
         state.games.push(...games);
       },
       UPDATE_NAME_FILTER(state, val : string) : void{
@@ -42,10 +42,25 @@ const store: StoreOptions<RootState> = {
             try{
                 const res: Response = await fetch('https://public.connectnow.org.uk/applicant-test/');
                 const games:GamesInterface[] = (await res.json()) as GamesInterface[];
-                commit('addGames',games);
+                commit('ADD_GAMES',games);
             }catch(e){
                 console.error(e);
             }
+        },
+        updateNameFilter({commit}, payload:string){
+            commit('UPDATE_NAME_FILTER',payload);
+        },
+        updateMinScoreFilter({ commit }, payload:number){
+            commit('UPDATE_MIN_SCORE_FILTER',payload);
+        },
+        updateGamesOrder({commit}, payload:string){
+            commit('UPDATE_GAMES_ORDER',payload);
+        },
+        clearAllFilters({ commit }){
+            commit('CLEAR_ALL_FILTERS');
+        },
+        changeOrder({ commit }){
+            commit('CHANGE_ORDER');
         }
     },
     getters:{
@@ -83,6 +98,9 @@ const store: StoreOptions<RootState> = {
         },
         getGamesCount({ games }):number{
             return games.length;
+        },
+        sortOrder({ sortOrder }):string|null{
+            return sortOrder;
         } 
     }
 }
